@@ -1,43 +1,110 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Задание по Химии №1</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Магазин заданий ЕГЭ</title>
   <style>
     body {
       font-family: sans-serif;
+      background: #f9f9f9;
       padding: 20px;
-      background-color: #f4f4f4;
     }
+
+    h1 {
+      text-align: center;
+    }
+
     .container {
+      max-width: 500px;
+      margin: auto;
       background: white;
-      border-radius: 12px;
       padding: 20px;
+      border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    button {
-      padding: 12px 20px;
+
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
       font-size: 16px;
-      border: none;
+    }
+
+    .question-box {
+      background: #f0f0f0;
       border-radius: 8px;
-      background-color: #0088cc;
-      color: white;
-      cursor: pointer;
+      padding: 10px;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Задание №1: Химия</h2>
-    <p><strong>Вопрос:</strong> Какой из приведённых оксидов является кислотным?</p>
-    <ul>
-      <li>A) Na₂O</li>
-      <li>B) CO₂</li>
-      <li>C) MgO</li>
-      <li>D) FeO</li>
-    </ul>
-    <button onclick="alert('Платёж пока не подключён 🙂')">Купить за 390₽</button>
+    <h1>Магазин заданий</h1>
+
+    <label for="taskSelect">Выберите номер задания (1–28):</label>
+    <select id="taskSelect">
+      <option value="">— Выберите —</option>
+      <!-- Генерируются задания -->
+    </select>
+
+    <div id="questionBox" class="question-box" style="display:none;"></div>
+
+    <button id="buyButton" style="display:none;">Купить задание за 390₽</button>
   </div>
+
+  <script>
+    const taskData = {
+      1: {
+        question: `Задание №1: Химия<br><br>
+<b>Вопрос:</b> Какой из приведённых оксидов является кислотным?<br><br>
+A) Na₂O<br>
+B) CO₂<br>
+C) MgO<br>
+D) FeO`
+      },
+      2: {
+        question: `Задание №2: Химия<br><br>
+<b>Вопрос:</b> Какой из элементов проявляет переменную валентность?<br><br>
+A) Na<br>
+B) Al<br>
+C) Fe<br>
+D) O`
+      }
+      // Добавляй сюда другие задания...
+    };
+
+    const select = document.getElementById('taskSelect');
+    const questionBox = document.getElementById('questionBox');
+    const buyButton = document.getElementById('buyButton');
+
+    // Генерируем опции
+    for (let i = 1; i <= 28; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `Задание №${i}`;
+      select.appendChild(opt);
+    }
+
+    select.addEventListener('change', () => {
+      const val = select.value;
+      if (taskData[val]) {
+        questionBox.innerHTML = taskData[val].question;
+        questionBox.style.display = 'block';
+        buyButton.style.display = 'block';
+      } else {
+        questionBox.innerHTML = 'Пример пока недоступен.';
+        questionBox.style.display = 'block';
+        buyButton.style.display = 'none';
+      }
+    });
+
+    buyButton.addEventListener('click', () => {
+      alert("Покупка будет доступна позже. Напишите в поддержку @exametrsupport");
+      // Здесь можно интегрировать реальную оплату позже
+    });
+  </script>
 </body>
 </html>
+
