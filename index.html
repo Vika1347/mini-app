@@ -2,205 +2,132 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Магазин заданий ЕГЭ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Экзаметр — Магазин проверок</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
+      font-family: sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
     }
-    header {
-      background: #5e81ac;
-      color: white;
-      padding: 1rem;
+    h1 {
       text-align: center;
-      font-size: 1.2rem;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      padding: 1.5rem;
+      margin-bottom: 20px;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-      gap: 10px;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
     }
-    .grid button {
-      padding: 10px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 6px;
-      background: #a3be8c;
-      color: white;
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: 0.2s ease;
       cursor: pointer;
     }
-    .grid button:hover {
-      opacity: 0.9;
+    .card:hover {
+      transform: scale(1.02);
     }
-    .result {
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: none;
-    }
-    .result h3 {
-      margin-top: 0;
-    }
-    .actions button {
-      margin-top: 0.7rem;
-      padding: 0.8rem;
+    .card img {
       width: 100%;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      height: 100px;
+      object-fit: cover;
     }
-    .buy-btn {
-      background: #b48ead;
-      color: white;
+    .card-body {
+      padding: 10px;
     }
-    .preview-btn {
-      background: #88c0d0;
-      color: white;
+    .title {
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 8px;
     }
-    footer {
-      text-align: center;
-      font-size: 0.9rem;
+    .price {
       color: #666;
-      margin-top: 3rem;
-      padding-bottom: 2rem;
+      font-size: 13px;
+    }
+
+    #cart-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #cart-modal .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
     }
   </style>
 </head>
 <body>
-  <header>🛍 Магазин заданий ЕГЭ по химии</header>
-<div style="text-align: right; padding: 1rem; margin-right: 1rem;">
-  <button onclick="openCart()" style="padding: 0.6rem 1rem; background: #d08770; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;">
-    🛒 Корзина (<span id="cart-count">0</span>)
-  </button>
-</div>
+  <h1>Категории</h1>
+  <div class="grid" id="product-grid"></div>
 
-  <div class="container">
-    <h3>Выберите номер задания:</h3>
-    <div class="grid" id="task-buttons"></div>
-
-    <div class="result" id="result">
-      <h3>Задание №<span id="task-id"></span></h3>
-      <p><strong>Пример:</strong> <span id="task-example">Текст задания появится здесь...</span></p>
-      <div class="actions">
-        <button class="preview-btn" onclick="alert('Это пример задания. После оплаты вы получите PDF с пояснениями.')">👁 Показать пример</button>
-        <button class="buy-btn" onclick="alert('Покупка пока не подключена. Напишите в поддержку.')">🛒 Купить за 390₽</button>
-      </div>
+  <div id="cart-modal">
+    <div class="modal-content">
+      <h3>🛒 Корзина</h3>
+      <p>Здесь будет список товаров</p>
+      <button onclick="closeCart()">Закрыть</button>
     </div>
   </div>
 
-<div id="cart-modal" style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); background: white; border-radius: 10px; padding: 1rem 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 999; max-width: 400px; width: 90%;">
-  <h3>🧾 Корзина</h3>
-  <ul id="cart-list" style="list-style: none; padding: 0;"></ul>
-  <button onclick="closeCart()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #bf616a; color: white; border: none; border-radius: 6px; cursor: pointer;">Закрыть</button>
-</div>
+  <script>
+    const products = Array.from({ length: 28 }, (_, i) => ({
+      id: i + 1,
+      title: `Подборка 100 заданий №${i + 1}`,
+      price: "390₽",
+      img: "ОЛ.png",
+    }));
 
+    const grid = document.getElementById("product-grid");
 
-  <footer>
-    📢 Канал: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a>
-  </footer>
-   
-
- <script>
-  const examples = {
-    1: "Какой из оксидов является кислотным? A) Na₂O B) CO₂ C) MgO D) FeO",
-    2: "Рассчитайте массу вещества по уравнению реакции...",
-    3: "Установите соответствие между веществом и его свойствами...",
-    // Добавь остальные задания
-  };
-
-  const cart = []; // корзина
-
-  const taskButtons = document.getElementById("task-buttons");
-  const resultBox = document.getElementById("result");
-  const taskIdSpan = document.getElementById("task-id");
-  const taskExampleSpan = document.getElementById("task-example");
-  const previewBtn = document.querySelector(".preview-btn");
-  const buyBtn = document.querySelector(".buy-btn");
-
-  // создаём 28 кнопок
-  for (let i = 1; i <= 28; i++) {
-    const btn = document.createElement("button");
-    btn.innerText = i;
-    btn.onclick = () => showTask(i);
-    taskButtons.appendChild(btn);
-  }
-
-  function showTask(number) {
-    taskIdSpan.innerText = number;
-    taskExampleSpan.innerText = examples[number] || "Текст задания пока не добавлен.";
-    previewBtn.style.display = "inline-block";
-    buyBtn.style.display = "inline-block";
-    resultBox.style.display = "block";
-  }
-
-  previewBtn.onclick = () => {
-    alert("Это пример задания. После оплаты вы получите PDF с пояснениями.");
-    buyBtn.style.display = "none"; // скрываем кнопку "Купить"
-  };
-
-  buyBtn.onclick = () => {
-    const taskNumber = taskIdSpan.innerText;
-    if (!cart.includes(taskNumber)) {
-      cart.push(taskNumber);
-      alert(`Задание №${taskNumber} добавлено в корзину.`);
-      updateCartCounter();
-    } else {
-      alert(`Задание №${taskNumber} уже в корзине.`);
-    }
-  };
-
-  function updateCartCounter() {
-    document.getElementById("cart-count").innerText = cart.length;
-  }
-
-  function openCart() {
-    const cartList = document.getElementById("cart-list");
-    cartList.innerHTML = "";
-
-    if (cart.length === 0) {
-      cartList.innerHTML = "<li>Корзина пуста.</li>";
-    } else {
-      cart.forEach(task => {
-        const li = document.createElement("li");
-        li.innerText = "Задание №" + task;
-        cartList.appendChild(li);
+    products.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${item.img}" alt="Product">
+        <div class="card-body">
+          <div class="title">${item.title}</div>
+          <div class="price">${item.price}</div>
+        </div>
+      `;
+      card.addEventListener("click", () => {
+        alert(`${item.title}\nЦена: ${item.price}\n\nОписание: Это подборка из 100 заданий для подготовки к экзамену.`);
       });
+      grid.appendChild(card);
+    });
+
+    function openCart() {
+      document.getElementById("cart-modal").style.display = "flex";
     }
+    function closeCart() {
+      document.getElementById("cart-modal").style.display = "none";
+    }
+  </script>
 
-    document.getElementById("cart-modal").style.display = "block";
-  }
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
 
-  function closeCart() {
-    document.getElementById("cart-modal").style.display = "none";
-  }
-</script>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-  const tg = window.Telegram.WebApp;
-  tg.ready();
-
-  tg.expand(); // делает окно на весь экран
-
-  tg.MainButton.setText("🛒 Перейти в корзину");
-  tg.MainButton.show();
-
-  tg.MainButton.onClick(() => {
-    // Здесь можно перейти к корзине или отправить данные в бота
-    openCart(); // функция, которая открывает корзину
-  });
-</script>
+    tg.MainButton.setText("🛒 Перейти в корзину");
+    tg.MainButton.show();
+    tg.MainButton.onClick(openCart);
+  </script>
 </body>
 </html>
 
