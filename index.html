@@ -99,29 +99,52 @@
    
 
   <script>
-    const examples = {
-      1: "Какой из оксидов является кислотным? A) Na₂O B) CO₂ C) MgO D) FeO",
-      2: "Рассчитайте массу вещества по уравнению реакции...",
-      3: "Установите соответствие между веществом и его свойствами...",
-      // Добавь свои тексты для остальных заданий
-    };
+  const examples = {
+    1: "Какой из оксидов является кислотным? A) Na₂O B) CO₂ C) MgO D) FeO",
+    2: "Рассчитайте массу вещества по уравнению реакции...",
+    3: "Установите соответствие между веществом и его свойствами...",
+    // Добавь остальные задания
+  };
 
-    const taskButtons = document.getElementById("task-buttons");
+  const cart = []; // корзина
 
-    // Создание 28 кнопок
-    for (let i = 1; i <= 28; i++) {
-      const btn = document.createElement("button");
-      btn.innerText = i;
-      btn.onclick = () => showTask(i);
-      taskButtons.appendChild(btn);
+  const taskButtons = document.getElementById("task-buttons");
+  const resultBox = document.getElementById("result");
+  const taskIdSpan = document.getElementById("task-id");
+  const taskExampleSpan = document.getElementById("task-example");
+  const previewBtn = document.querySelector(".preview-btn");
+  const buyBtn = document.querySelector(".buy-btn");
+
+  // создаём 28 кнопок
+  for (let i = 1; i <= 28; i++) {
+    const btn = document.createElement("button");
+    btn.innerText = i;
+    btn.onclick = () => showTask(i);
+    taskButtons.appendChild(btn);
+  }
+
+  function showTask(number) {
+    taskIdSpan.innerText = number;
+    taskExampleSpan.innerText = examples[number] || "Текст задания пока не добавлен.";
+    previewBtn.style.display = "inline-block";
+    buyBtn.style.display = "inline-block";
+    resultBox.style.display = "block";
+  }
+
+  previewBtn.onclick = () => {
+    alert("Это пример задания. После оплаты вы получите PDF с пояснениями.");
+    // скрываем кнопку покупки
+    buyBtn.style.display = "none";
+  };
+
+  buyBtn.onclick = () => {
+    const taskNumber = taskIdSpan.innerText;
+    if (!cart.includes(taskNumber)) {
+      cart.push(taskNumber);
+      alert(`Задание №${taskNumber} добавлено в корзину.`);
+      console.log("Корзина:", cart); // Можно потом показать корзину на странице
+    } else {
+      alert(`Задание №${taskNumber} уже в корзине.`);
     }
-
-    function showTask(number) {
-      document.getElementById("task-id").innerText = number;
-      document.getElementById("task-example").innerText =
-        examples[number] || "Текст задания пока не добавлен.";
-      document.getElementById("result").style.display = "block";
-    }
-  </script>
-</body>
-</html>
+  };
+</script>
