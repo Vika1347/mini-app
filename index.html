@@ -2,49 +2,43 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Магазин ЕГЭ Заданий</title>
+  <title>Магазин заданий ЕГЭ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background: #f0f0f0;
       margin: 0;
       padding: 0;
     }
     header {
-      background-color: #5e81ac;
+      background: #5e81ac;
       color: white;
       padding: 1rem;
       text-align: center;
       font-size: 1.2rem;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
       padding: 1.5rem;
     }
-    .input-section {
-      margin-bottom: 1.5rem;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 10px;
+      margin-bottom: 2rem;
     }
-    input[type="number"] {
-      padding: 0.6rem;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    button {
-      margin-top: 1rem;
-      padding: 0.8rem;
-      width: 100%;
+    .grid button {
+      padding: 10px;
       font-size: 1rem;
       border: none;
-      border-radius: 8px;
-      background-color: #a3be8c;
+      border-radius: 6px;
+      background: #a3be8c;
       color: white;
       cursor: pointer;
     }
-    button:hover {
+    .grid button:hover {
       opacity: 0.9;
     }
     .result {
@@ -52,22 +46,34 @@
       padding: 1rem;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-top: 1rem;
       display: none;
     }
     .result h3 {
       margin-top: 0;
     }
+    .actions button {
+      margin-top: 0.7rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .buy-btn {
+      background: #b48ead;
+      color: white;
+    }
     .preview-btn {
-      background-color: #88c0d0;
-      margin-top: 0.5rem;
+      background: #88c0d0;
+      color: white;
     }
     footer {
       text-align: center;
-      color: #555;
       font-size: 0.9rem;
+      color: #666;
       margin-top: 3rem;
-      padding-bottom: 1rem;
+      padding-bottom: 2rem;
     }
   </style>
 </head>
@@ -75,39 +81,47 @@
   <header>🛍 Магазин заданий ЕГЭ по химии</header>
 
   <div class="container">
-    <div class="input-section">
-      <label for="task-number"><strong>Введите номер задания (от 1 до 28):</strong></label>
-      <input type="number" id="task-number" min="1" max="28" placeholder="Например, 5" />
-      <button onclick="showTask()">Показать задание</button>
-    </div>
+    <h3>Выберите номер задания:</h3>
+    <div class="grid" id="task-buttons"></div>
 
     <div class="result" id="result">
       <h3>Задание №<span id="task-id"></span></h3>
-      <p><strong>Пример:</strong> Пример задания №<span id="task-id-2"></span> — выберите верный вариант ответа из предложенных.</p>
-      <button onclick="alert('Покупка пока не реализована')">🛒 Купить за 390₽</button>
-      <button class="preview-btn" onclick="alert('Вот пример задания. После оплаты будет подробный разбор.')">👁 Показать пример</button>
+      <p><strong>Пример:</strong> <span id="task-example">Текст задания появится здесь...</span></p>
+      <div class="actions">
+        <button class="preview-btn" onclick="alert('Это пример задания. После оплаты вы получите PDF с пояснениями.')">👁 Показать пример</button>
+        <button class="buy-btn" onclick="alert('Покупка пока не подключена. Напишите в поддержку.')">🛒 Купить за 390₽</button>
+      </div>
     </div>
   </div>
 
   <footer>
-    📢 Канал: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a> |
-    🛠 Поддержка: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a>
+    📢 Канал: <a href="https://t.me/proverkiege">@proverkiege</a> |
+    🛠 Поддержка: <a href="https://t.me/exametrsupport">@exametrsupport</a>
   </footer>
 
   <script>
-    function showTask() {
-      const input = document.getElementById("task-number").value;
-      const taskId = parseInt(input);
-      const resultBox = document.getElementById("result");
+    const examples = {
+      1: "Какой из оксидов является кислотным? A) Na₂O B) CO₂ C) MgO D) FeO",
+      2: "Рассчитайте массу вещества по уравнению реакции...",
+      3: "Установите соответствие между веществом и его свойствами...",
+      // Добавь свои тексты для остальных заданий
+    };
 
-      if (taskId >= 1 && taskId <= 28) {
-        document.getElementById("task-id").innerText = taskId;
-        document.getElementById("task-id-2").innerText = taskId;
-        resultBox.style.display = "block";
-      } else {
-        alert("Введите число от 1 до 28");
-        resultBox.style.display = "none";
-      }
+    const taskButtons = document.getElementById("task-buttons");
+
+    // Создание 28 кнопок
+    for (let i = 1; i <= 28; i++) {
+      const btn = document.createElement("button");
+      btn.innerText = i;
+      btn.onclick = () => showTask(i);
+      taskButtons.appendChild(btn);
+    }
+
+    function showTask(number) {
+      document.getElementById("task-id").innerText = number;
+      document.getElementById("task-example").innerText =
+        examples[number] || "Текст задания пока не добавлен.";
+      document.getElementById("result").style.display = "block";
     }
   </script>
 </body>
