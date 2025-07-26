@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Магазин заданий ЕГЭ по химии</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Магазин ЕГЭ Заданий</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: #f9f9f9;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
       margin: 0;
       padding: 0;
     }
@@ -16,90 +16,99 @@
       color: white;
       padding: 1rem;
       text-align: center;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
     .container {
+      max-width: 600px;
+      margin: auto;
       padding: 1.5rem;
     }
-    .task {
-      background: white;
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .input-section {
+      margin-bottom: 1.5rem;
     }
-    .task h2 {
-      margin-top: 0;
-      color: #333;
-    }
-    .task p {
-      margin: 0.5rem 0;
-    }
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .buttons button {
-      padding: 0.8rem;
-      border: none;
+    input[type="number"] {
+      padding: 0.6rem;
+      width: 100%;
+      border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
-      cursor: pointer;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      width: 100%;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
       background-color: #a3be8c;
       color: white;
-      transition: 0.3s;
+      cursor: pointer;
     }
-    .buttons button.preview {
-      background-color: #88c0d0;
-    }
-    .buttons button:hover {
+    button:hover {
       opacity: 0.9;
     }
-    footer {
+    .result {
+      background: white;
       padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+      display: none;
+    }
+    .result h3 {
+      margin-top: 0;
+    }
+    .preview-btn {
+      background-color: #88c0d0;
+      margin-top: 0.5rem;
+    }
+    footer {
       text-align: center;
-      font-size: 0.9rem;
       color: #555;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+      padding-bottom: 1rem;
     }
   </style>
 </head>
 <body>
-  <header>🛍 Магазин заданий по химии (ЕГЭ)</header>
+  <header>🛍 Магазин заданий ЕГЭ по химии</header>
+
   <div class="container">
-
-    <div class="task">
-      <h2>Задание №1</h2>
-      <p><strong>Тема:</strong> Определение типа оксида</p>
-      <p><strong>Пример:</strong> Какой из приведённых оксидов является кислотным?</p>
-      <p><strong>Варианты:</strong><br>
-        A) Na₂O<br>
-        B) CO₂<br>
-        C) MgO<br>
-        D) FeO
-      </p>
-      <div class="buttons">
-        <button onclick="alert('Покупка пока не реализована')">🛒 Купить за 390₽</button>
-        <button class="preview" onclick="alert('Пример задания уже показан выше')">👁 Пример задания</button>
-      </div>
+    <div class="input-section">
+      <label for="task-number"><strong>Введите номер задания (от 1 до 28):</strong></label>
+      <input type="number" id="task-number" min="1" max="28" placeholder="Например, 5" />
+      <button onclick="showTask()">Показать задание</button>
     </div>
 
-    <!-- Добавь ещё задания вот так же, если хочешь -->
-    <!--
-    <div class="task">
-      <h2>Задание №2</h2>
-      ...
+    <div class="result" id="result">
+      <h3>Задание №<span id="task-id"></span></h3>
+      <p><strong>Пример:</strong> Пример задания №<span id="task-id-2"></span> — выберите верный вариант ответа из предложенных.</p>
+      <button onclick="alert('Покупка пока не реализована')">🛒 Купить за 390₽</button>
+      <button class="preview-btn" onclick="alert('Вот пример задания. После оплаты будет подробный разбор.')">👁 Показать пример</button>
     </div>
-    -->
-
   </div>
 
   <footer>
-    📞 Поддержка: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a> |
-    📢 Канал: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a>
+    📢 Канал: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a> |
+    🛠 Поддержка: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a>
   </footer>
+
+  <script>
+    function showTask() {
+      const input = document.getElementById("task-number").value;
+      const taskId = parseInt(input);
+      const resultBox = document.getElementById("result");
+
+      if (taskId >= 1 && taskId <= 28) {
+        document.getElementById("task-id").innerText = taskId;
+        document.getElementById("task-id-2").innerText = taskId;
+        resultBox.style.display = "block";
+      } else {
+        alert("Введите число от 1 до 28");
+        resultBox.style.display = "none";
+      }
+    }
+  </script>
 </body>
 </html>
-
-
