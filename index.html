@@ -169,21 +169,51 @@
           <div class="price">${item.price}</div>
         </div>
       `;
-      card.addEventListener("click", () => {
-        if (!cart.includes(item.id)) {
-          cart.push(item.id);
-          updateCartCounter();
-          alert(`${item.title}\nЦена: ${item.price}\n\nОписание: Это подборка из 100 заданий для подготовки к экзамену.`);
-        } else {
-          alert(`${item.title} уже в корзине.`);
-        }
-      });
+    card.addEventListener("click", () => {
+  openProductModal(item);
+});
+
       grid.appendChild(card);
     });
 
     function updateCartCounter() {
       document.getElementById("cart-count").innerText = cart.length;
     }
+<script>
+  let currentItem = null;
+  let currentQty = 1;
+
+  function openProductModal(item) {
+    currentItem = item;
+    currentQty = 1;
+
+    document.getElementById("modal-img").src = item.img;
+    document.getElementById("modal-title").innerText = item.title;
+    document.getElementById("modal-price").innerText = item.price;
+    document.getElementById("modal-desc").innerText = "Тест + сочинение. Реальный уровень ЕГЭ."; // тут можно заменить на своё
+    document.getElementById("modal-qty").innerText = currentQty;
+
+    document.getElementById("product-modal").style.display = "flex";
+  }
+
+  function closeProductModal() {
+    document.getElementById("product-modal").style.display = "none";
+  }
+
+  function changeQty(delta) {
+    currentQty += delta;
+    if (currentQty < 1) currentQty = 1;
+    document.getElementById("modal-qty").innerText = currentQty;
+  }
+
+  function addToCart() {
+    for (let i = 0; i < currentQty; i++) {
+      cart.push(currentItem.id);
+    }
+    updateCartCounter();
+    closeProductModal();
+  }
+</script>
 
     function openCart() {
       const cartList = document.getElementById("cart-list");
@@ -217,6 +247,29 @@
     tg.MainButton.onClick(openCart);
   </script>
 </body>
+  
+  <!-- Модалка для карточки товара -->
+<div id="product-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; overflow-y: auto;">
+  <div style="background: white; margin: 40px auto; padding: 20px; border-radius: 16px; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <img id="modal-img" src="" style="width: 100%; border-radius: 12px;" />
+    <h2 id="modal-title" style="font-size: 18px; margin: 16px 0 8px;"></h2>
+    <div id="modal-price" style="font-size: 16px; color: #333; font-weight: bold;"></div>
+    <p id="modal-desc" style="font-size: 14px; margin: 12px 0;">Описание товара</p>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin: 20px 0;">
+      <button onclick="changeQty(-1)" style="padding: 6px 14px; font-size: 18px;">−</button>
+      <span id="modal-qty" style="font-size: 16px;">1</span>
+      <button onclick="changeQty(1)" style="padding: 6px 14px; font-size: 18px;">+</button>
+    </div>
+
+    <button onclick="addToCart()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
+      Добавить в корзину
+    </button>
+
+    <button onclick="closeProductModal()" style="margin-top: 10px; background: none; border: none; color: #007aff; width: 100%; font-size: 14px;">Закрыть</button>
+  </div>
+</div>
+
 </html>
 
 
