@@ -1,110 +1,105 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Магазин заданий ЕГЭ</title>
+  <meta charset="UTF-8">
+  <title>Магазин заданий ЕГЭ по химии</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Arial', sans-serif;
       background: #f9f9f9;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
     }
-
-    h1 {
+    header {
+      background-color: #5e81ac;
+      color: white;
+      padding: 1rem;
       text-align: center;
+      font-size: 1.3rem;
     }
-
     .container {
-      max-width: 500px;
-      margin: auto;
+      padding: 1.5rem;
+    }
+    .task {
       background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
-    select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
+    .task h2 {
+      margin-top: 0;
+      color: #333;
     }
-
-    .question-box {
-      background: #f0f0f0;
+    .task p {
+      margin: 0.5rem 0;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .buttons button {
+      padding: 0.8rem;
+      border: none;
       border-radius: 8px;
-      padding: 10px;
-      margin-top: 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #a3be8c;
+      color: white;
+      transition: 0.3s;
+    }
+    .buttons button.preview {
+      background-color: #88c0d0;
+    }
+    .buttons button:hover {
+      opacity: 0.9;
+    }
+    footer {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
     }
   </style>
 </head>
 <body>
+  <header>🛍 Магазин заданий по химии (ЕГЭ)</header>
   <div class="container">
-    <h1>Магазин заданий</h1>
 
-    <label for="taskSelect">Выберите номер задания (1–28):</label>
-    <select id="taskSelect">
-      <option value="">— Выберите —</option>
-      <!-- Генерируются задания -->
-    </select>
+    <div class="task">
+      <h2>Задание №1</h2>
+      <p><strong>Тема:</strong> Определение типа оксида</p>
+      <p><strong>Пример:</strong> Какой из приведённых оксидов является кислотным?</p>
+      <p><strong>Варианты:</strong><br>
+        A) Na₂O<br>
+        B) CO₂<br>
+        C) MgO<br>
+        D) FeO
+      </p>
+      <div class="buttons">
+        <button onclick="alert('Покупка пока не реализована')">🛒 Купить за 390₽</button>
+        <button class="preview" onclick="alert('Пример задания уже показан выше')">👁 Пример задания</button>
+      </div>
+    </div>
 
-    <div id="questionBox" class="question-box" style="display:none;"></div>
+    <!-- Добавь ещё задания вот так же, если хочешь -->
+    <!--
+    <div class="task">
+      <h2>Задание №2</h2>
+      ...
+    </div>
+    -->
 
-    <button id="buyButton" style="display:none;">Купить задание за 390₽</button>
   </div>
 
-  <script>
-    const taskData = {
-      1: {
-        question: `Задание №1: Химия<br><br>
-<b>Вопрос:</b> Какой из приведённых оксидов является кислотным?<br><br>
-A) Na₂O<br>
-B) CO₂<br>
-C) MgO<br>
-D) FeO`
-      },
-      2: {
-        question: `Задание №2: Химия<br><br>
-<b>Вопрос:</b> Какой из элементов проявляет переменную валентность?<br><br>
-A) Na<br>
-B) Al<br>
-C) Fe<br>
-D) O`
-      }
-      // Добавляй сюда другие задания...
-    };
-
-    const select = document.getElementById('taskSelect');
-    const questionBox = document.getElementById('questionBox');
-    const buyButton = document.getElementById('buyButton');
-
-    // Генерируем опции
-    for (let i = 1; i <= 28; i++) {
-      const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = `Задание №${i}`;
-      select.appendChild(opt);
-    }
-
-    select.addEventListener('change', () => {
-      const val = select.value;
-      if (taskData[val]) {
-        questionBox.innerHTML = taskData[val].question;
-        questionBox.style.display = 'block';
-        buyButton.style.display = 'block';
-      } else {
-        questionBox.innerHTML = 'Пример пока недоступен.';
-        questionBox.style.display = 'block';
-        buyButton.style.display = 'none';
-      }
-    });
-
-    buyButton.addEventListener('click', () => {
-      alert("Покупка будет доступна позже. Напишите в поддержку @exametrsupport");
-      // Здесь можно интегрировать реальную оплату позже
-    });
-  </script>
+  <footer>
+    📞 Поддержка: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a> |
+    📢 Канал: <a href="https://t.me/itschemistrymydudes">@itschemistrymydudes</a>
+  </footer>
 </body>
 </html>
+
 
