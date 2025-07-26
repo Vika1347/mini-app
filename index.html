@@ -184,9 +184,19 @@
     document.getElementById("cart-modal").style.display = "none";
   }
 </script>
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
   const tg = window.Telegram.WebApp;
   tg.ready();
-  tg.expand(); // Открытие на весь экран
+  tg.expand(); // делает окно на весь экран
+
+  tg.MainButton.setText("🛒 Перейти в корзину");
+  tg.MainButton.show();
+
+  tg.MainButton.onClick(() => {
+    // Здесь можно перейти к корзине или отправить данные в бота
+    openCart(); // функция, которая открывает корзину
+  });
 </script>
+
