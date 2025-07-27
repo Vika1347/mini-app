@@ -173,12 +173,11 @@
   <div id="cart-modal">
     <div class="modal-content">
       <h3>🛒 Корзина</h3>
-      <ul id="cart-list" style="padding-left: 20px; margin-bottom: 20px;"></ul>
-
-<div style="display: flex; gap: 10px; flex-wrap: wrap;">
-  <button onclick="clearCart()" class="btn danger">🧹 Очистить</button>
-  <button onclick="closeCart()" class="btn">Закрыть</button>
+    <ul id="cart-list" style="padding-left: 20px;"></ul>
+<button onclick="closeCart()">Закрыть</button>
+  <button onclick="goToCheckout()" class="btn"> Продолжить</button>
 </div>
+
 
     </div>
   </div>
@@ -221,6 +220,34 @@ function saveCart() {
     function updateCartCounter() {
       document.getElementById("cart-count").innerText = cart.length;
     }
+
+    function goToCheckout() {
+  document.getElementById("checkout-modal").style.display = "flex";
+  document.getElementById("cart-modal").style.display = "none";
+}
+
+function closeCheckout() {
+  document.getElementById("checkout-modal").style.display = "none";
+}
+
+function submitOrder() {
+  const name = document.getElementById("checkout-name").value.trim();
+  const phone = document.getElementById("checkout-phone").value.trim();
+
+  if (!name || !phone) {
+    alert("Пожалуйста, заполните все поля.");
+    return;
+  }
+
+  // Здесь можно отправить данные на сервер или в Telegram
+  alert(`🎉 Заказ оформлен!\nИмя: ${name}\nТелефон: ${phone}\nТоваров: ${cart.length}`);
+
+  cart = [];
+  saveCart();
+  updateCartCounter();
+  closeCheckout();
+}
+
 
    updateCartCounter();
 
@@ -289,8 +316,9 @@ function addToCart() {
       const li = document.createElement("li");
      li.innerHTML = `
   ${item.title} — ${item.price}
-  <button onclick="removeFromCart(${id})" class="cart-icon">🗑</button>
+  <button onclick="removeFromCart(${id})" style="margin-left: 10px;">🗑</button>
 `;
+
 
       cartList.appendChild(li);
     });
@@ -331,7 +359,27 @@ function removeFromCart(id) {
     <div id="modal-price" style="font-size: 16px; color: #333; font-weight: bold;"></div>
     <p id="modal-desc" style="font-size: 14px; margin: 12px 0;">Описание товара</p>
 
-  
+  <!-- 🧾 Модалка оформления заказа -->
+<div id="checkout-modal" style="display: none; position: fixed; inset: 0; background: white; z-index: 10000; overflow-y: auto;">
+  <div style="margin: 40px auto; padding: 20px; border-radius: 16px; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: white;">
+    <h2 style="font-size: 18px; margin-bottom: 16px;">Оформление заказа</h2>
+    
+    <label>Ваше имя:</label>
+    <input id="checkout-name" type="text" placeholder="Иван" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc;">
+
+    <label>Номер телефона:</label>
+    <input id="checkout-phone" type="tel" placeholder="+7" style="width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc;">
+
+    <button onclick="submitOrder()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
+      ✅ Оформить заказ
+    </button>
+
+    <button onclick="closeCheckout()" style="margin-top: 10px; background: none; border: none; color: #007aff; width: 100%; font-size: 14px;">
+      Назад
+    </button>
+  </div>
+</div>
+
 
     <button id="add-btn" onclick="addToCart()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
   Добавить в корзину
