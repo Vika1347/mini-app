@@ -220,7 +220,18 @@ function addToCart() {
     updateCartCounter();
     saveCart(); // ⬅️ сохраняем корзину
     closeProductModal();
+
+  const btn = document.getElementById("add-btn");
+  btn.innerText = "✅ Добавлено!";
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.innerText = "Добавить в корзину";
+    btn.disabled = false;
+    closeProductModal();
+  }, 1500);
 }
+
 
 </script>
   
@@ -268,9 +279,9 @@ function addToCart() {
 
   
 
-    <button onclick="addToCart()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
-      Добавить в корзину
-    </button>
+    <button id="add-btn" onclick="addToCart()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
+  Добавить в корзину
+</button>
 
     <button onclick="closeProductModal()" style="margin-top: 10px; background: none; border: none; color: #007aff; width: 100%; font-size: 14px;">Закрыть</button>
   </div>
