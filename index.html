@@ -216,10 +216,14 @@ function saveCart() {
   }
 
 function addToCart() {
-    cart.push(currentItem.id);
-    updateCartCounter();
-    saveCart(); // ⬅️ сохраняем корзину
-    closeProductModal();
+  if (cart.includes(currentItem.id)) {
+    alert("🔁 Этот товар уже в корзине");
+    return;
+  }
+
+  cart.push(currentItem.id);
+  updateCartCounter();
+  saveCart(); // сохраняем корзину
 
   const btn = document.getElementById("add-btn");
   btn.innerText = "✅ Добавлено!";
@@ -231,6 +235,7 @@ function addToCart() {
     closeProductModal();
   }, 1500);
 }
+
 
 
 </script>
