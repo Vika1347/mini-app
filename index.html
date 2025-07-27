@@ -154,17 +154,6 @@
       <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="cart" />
       <span id="cart-count">0</span>
     </div>
-    <button onclick="goBack()" style="
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #007aff;
-">←</button>
-
   </div>
 
   <div class="grid" id="product-grid"></div>
@@ -296,9 +285,10 @@
       document.getElementById("product-modal").style.display = "flex";
     }
 
-    function closeProductModal() {
-      document.getElementById("product-modal").style.display = "none";
-    }
+   function closeProductModal() {
+  document.getElementById("product-modal").style.display = "none";
+  Telegram.WebApp.BackButton.hide(); // ⬅️ Скрываем кнопку "Назад"
+}
 
     function addToCart() {
       if (cart.includes(currentItem.id)) {
@@ -329,16 +319,17 @@
    // tg.MainButton.setText("🛒 Перейти в корзину");
     // tg.MainButton.show();
    // tg.MainButton.onClick(openCart);
+const tg = window.Telegram.WebApp;
 
-    function goBack() {
-  // Если в Telegram WebApp — закрываем окно
-  if (window.Telegram.WebApp && Telegram.WebApp.close) {
-    Telegram.WebApp.close();
-  } else {
-    // Иначе просто возвращаемся назад по истории
-    history.back();
-  }
+function showBackButton() {
+  tg.BackButton.show();
+  tg.BackButton.onClick(() => {
+    // Действие при нажатии «назад» в Telegram
+    closeProductModal(); // или другой метод закрытия
+    tg.BackButton.hide(); // скрываем кнопку назад после возврата
+  });
 }
+
 
   </script>
 </body>
