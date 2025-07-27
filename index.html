@@ -148,7 +148,13 @@
   </div>
 
   <script>
-    const cart = [];
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
 
     const products = Array.from({ length: 28 }, (_, i) => ({
       id: i + 1,
@@ -179,21 +185,22 @@
     function updateCartCounter() {
       document.getElementById("cart-count").innerText = cart.length;
     }
+
+   updateCartCounter();
+
   </script>
 
   <script>
   let currentItem = null;
-  let currentQty = 1;
 
   function openProductModal(item) {
     currentItem = item;
-    currentQty = 1;
 
     document.getElementById("modal-img").src = item.img;
     document.getElementById("modal-title").innerText = item.title;
     document.getElementById("modal-price").innerText = item.price;
     document.getElementById("modal-desc").innerText = "Тест + сочинение. Реальный уровень ЕГЭ."; // тут можно заменить на своё
-    document.getElementById("modal-qty").innerText = currentQty;
+    
 
     document.getElementById("product-modal").style.display = "flex";
   }
@@ -208,15 +215,16 @@
     document.getElementById("modal-qty").innerText = currentQty;
   }
 
-  function addToCart() {
-    for (let i = 0; i < currentQty; i++) {
-      cart.push(currentItem.id);
-    }
+function addToCart() {
+    cart.push(currentItem.id);
     updateCartCounter();
+    saveCart(); // ⬅️ сохраняем корзину
     closeProductModal();
-  }
-</script>
+}
 
+</script>
+  
+<script>
     function openCart() {
       const cartList = document.getElementById("cart-list");
       cartList.innerHTML = "";
@@ -258,11 +266,7 @@
     <div id="modal-price" style="font-size: 16px; color: #333; font-weight: bold;"></div>
     <p id="modal-desc" style="font-size: 14px; margin: 12px 0;">Описание товара</p>
 
-    <div style="display: flex; align-items: center; justify-content: space-between; margin: 20px 0;">
-      <button onclick="changeQty(-1)" style="padding: 6px 14px; font-size: 18px;">−</button>
-      <span id="modal-qty" style="font-size: 16px;">1</span>
-      <button onclick="changeQty(1)" style="padding: 6px 14px; font-size: 18px;">+</button>
-    </div>
+  
 
     <button onclick="addToCart()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
       Добавить в корзину
