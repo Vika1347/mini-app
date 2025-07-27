@@ -276,14 +276,22 @@
     });
 
     let currentItem = null;
-    function openProductModal(item) {
-      currentItem = item;
-      document.getElementById("modal-img").src = item.img;
-      document.getElementById("modal-title").innerText = item.title;
-      document.getElementById("modal-price").innerText = item.price;
-      document.getElementById("modal-desc").innerText = "Тест + сочинение. Реальный уровень ЕГЭ.";
-      document.getElementById("product-modal").style.display = "flex";
-    }
+   function openProductModal(item) {
+  currentItem = item;
+  document.getElementById("modal-img").src = item.img;
+  document.getElementById("modal-title").innerText = item.title;
+  document.getElementById("modal-price").innerText = item.price;
+  document.getElementById("modal-desc").innerText = "Тест + сочинение. Реальный уровень ЕГЭ.";
+  document.getElementById("product-modal").style.display = "flex";
+
+  // Показать кнопку "Назад"
+  tg.BackButton.show();
+  tg.BackButton.onClick(() => {
+    closeProductModal();
+    tg.BackButton.hide();
+  });
+}
+
 
    function closeProductModal() {
   document.getElementById("product-modal").style.display = "none";
@@ -319,7 +327,7 @@
    // tg.MainButton.setText("🛒 Перейти в корзину");
     // tg.MainButton.show();
    // tg.MainButton.onClick(openCart);
-const tg = window.Telegram.WebApp;
+// const tg = window.Telegram.WebApp;
 
 function showBackButton() {
   tg.BackButton.show();
