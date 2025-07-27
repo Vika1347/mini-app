@@ -122,42 +122,32 @@
     #cart-list {
       margin-bottom: 20px;
     }
-  .btn {
-  background: #007aff;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
 
-.btn:hover {
-  background: #005fc0;
-}
+    .btn {
+      background: #007aff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
 
-.btn.danger {
-  background: #e63946;
-}
+    .btn:hover {
+      background: #005fc0;
+    }
 
-.btn.danger:hover {
-  background: #c92635;
-}
+    .btn.danger {
+      background: #e63946;
+    }
 
-.cart-icon button {
-  background: none;
-  border: none;
-  color: #e63946;
-  cursor: pointer;
-  font-size: 14px;
-}
-
+    .btn.danger:hover {
+      background: #c92635;
+    }
   </style>
 </head>
 <body>
-
-  <!-- 🔝 Верхняя шапка -->
   <div class="app-header">
     <div class="logo">Получи заветные 100 баллов! 🧪</div>
     <div class="cart-icon" onclick="openCart()">
@@ -169,37 +159,109 @@
   <h1>Категории</h1>
   <div class="grid" id="product-grid"></div>
 
-  <!-- 🛒 Модалка корзины -->
   <div id="cart-modal">
     <div class="modal-content">
       <h3>🛒 Корзина</h3>
-    <ul id="cart-list" style="padding-left: 20px;"></ul>
-<button onclick="closeCart()">Закрыть</button>
-  <button onclick="goToCheckout()" class="btn"> Продолжить</button>
-</div>
+      <ul id="cart-list" style="padding-left: 20px;"></ul>
+      <button onclick="closeCart()">Закрыть</button>
+      <button onclick="goToCheckout()" class="btn">Продолжить</button>
+    </div>
+  </div>
 
+  <div id="product-modal" style="display: none; position: fixed; inset: 0; background: white; z-index: 9999; overflow-y: auto;">
+    <div style="background: white; margin: 40px auto; padding: 20px; border-radius: 16px; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+      <img id="modal-img" src="" style="width: 100%; border-radius: 12px;" />
+      <h2 id="modal-title" style="font-size: 18px; margin: 16px 0 8px;"></h2>
+      <div id="modal-price" style="font-size: 16px; color: #333; font-weight: bold;"></div>
+      <p id="modal-desc" style="font-size: 14px; margin: 12px 0;">Описание товара</p>
 
+      <button id="add-btn" onclick="addToCart()" class="btn" style="width: 100%; font-size: 16px;">Добавить в корзину</button>
+      <button onclick="closeProductModal()" style="margin-top: 10px; background: none; border: none; color: #007aff; width: 100%; font-size: 14px;">Закрыть</button>
+    </div>
+  </div>
+
+  <div id="checkout-modal" style="display: none; position: fixed; inset: 0; background: white; z-index: 10000; overflow-y: auto;">
+    <div style="margin: 40px auto; padding: 20px; border-radius: 16px; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: white;">
+      <h2 style="font-size: 18px; margin-bottom: 16px;">Оформление заказа</h2>
+      <label>Ваше имя:</label>
+      <input id="checkout-name" type="text" placeholder="Иван" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc;">
+      <label>Номер телефона:</label>
+      <input id="checkout-phone" type="tel" placeholder="+7" style="width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc;">
+      <button onclick="submitOrder()" class="btn" style="width: 100%; font-size: 16px;">✅ Оформить заказ</button>
+      <button onclick="closeCheckout()" style="margin-top: 10px; background: none; border: none; color: #007aff; width: 100%; font-size: 14px;">Назад</button>
     </div>
   </div>
 
   <script>
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
+    function saveCart() {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
 
-function saveCart() {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
+    function updateCartCounter() {
+      document.getElementById("cart-count").innerText = cart.length;
+    }
 
+    function openCart() {
+      const cartList = document.getElementById("cart-list");
+      cartList.innerHTML = "";
+
+      if (cart.length === 0) {
+        cartList.innerHTML = "<li>Корзина пуста.</li>";
+      } else {
+        cart.forEach(id => {
+          const item = products.find(p => p.id === id);
+          const li = document.createElement("li");
+          li.innerHTML = `${item.title} — ${item.price} <button onclick="removeFromCart(${id})" style="margin-left: 10px;">🗑</button>`;
+          cartList.appendChild(li);
+        });
+      }
+      document.getElementById("cart-modal").style.display = "flex";
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(itemId => itemId !== id);
+      saveCart();
+      updateCartCounter();
+      openCart();
+    }
+
+    function closeCart() {
+      document.getElementById("cart-modal").style.display = "none";
+    }
+
+    function goToCheckout() {
+      document.getElementById("checkout-modal").style.display = "flex";
+      document.getElementById("cart-modal").style.display = "none";
+    }
+
+    function closeCheckout() {
+      document.getElementById("checkout-modal").style.display = "none";
+    }
+
+    function submitOrder() {
+      const name = document.getElementById("checkout-name").value.trim();
+      const phone = document.getElementById("checkout-phone").value.trim();
+      if (!name || !phone) {
+        alert("Пожалуйста, заполните все поля.");
+        return;
+      }
+      alert(`🎉 Заказ оформлен!\nИмя: ${name}\nТелефон: ${phone}\nТоваров: ${cart.length}`);
+      cart = [];
+      saveCart();
+      updateCartCounter();
+      closeCheckout();
+    }
 
     const products = Array.from({ length: 28 }, (_, i) => ({
       id: i + 1,
       title: `Подборка 100 заданий №${i + 1}`,
       price: "390₽",
-      img: "пример.jpg", // сюда поставь путь к своей картинке
+      img: "пример.jpg",
     }));
 
     const grid = document.getElementById("product-grid");
-
     products.forEach((item) => {
       const card = document.createElement("div");
       card.className = "card";
@@ -210,133 +272,43 @@ function saveCart() {
           <div class="price">${item.price}</div>
         </div>
       `;
-    card.addEventListener("click", () => {
-  openProductModal(item);
-});
-
+      card.addEventListener("click", () => openProductModal(item));
       grid.appendChild(card);
     });
 
-    function updateCartCounter() {
-      document.getElementById("cart-count").innerText = cart.length;
+    let currentItem = null;
+    function openProductModal(item) {
+      currentItem = item;
+      document.getElementById("modal-img").src = item.img;
+      document.getElementById("modal-title").innerText = item.title;
+      document.getElementById("modal-price").innerText = item.price;
+      document.getElementById("modal-desc").innerText = "Тест + сочинение. Реальный уровень ЕГЭ.";
+      document.getElementById("product-modal").style.display = "flex";
     }
 
-    function goToCheckout() {
-  document.getElementById("checkout-modal").style.display = "flex";
-  document.getElementById("cart-modal").style.display = "none";
-}
-
-function closeCheckout() {
-  document.getElementById("checkout-modal").style.display = "none";
-}
-
-function submitOrder() {
-  const name = document.getElementById("checkout-name").value.trim();
-  const phone = document.getElementById("checkout-phone").value.trim();
-
-  if (!name || !phone) {
-    alert("Пожалуйста, заполните все поля.");
-    return;
-  }
-
-  // Здесь можно отправить данные на сервер или в Telegram
-  alert(`🎉 Заказ оформлен!\nИмя: ${name}\nТелефон: ${phone}\nТоваров: ${cart.length}`);
-
-  cart = [];
-  saveCart();
-  updateCartCounter();
-  closeCheckout();
-}
-
-
-   updateCartCounter();
-
-  </script>
-
-  <script>
-  let currentItem = null;
-
-  function openProductModal(item) {
-    currentItem = item;
-
-    document.getElementById("modal-img").src = item.img;
-    document.getElementById("modal-title").innerText = item.title;
-    document.getElementById("modal-price").innerText = item.price;
-    document.getElementById("modal-desc").innerText = "Тест + сочинение. Реальный уровень ЕГЭ."; // тут можно заменить на своё
-    
-
-    document.getElementById("product-modal").style.display = "flex";
-  }
-
-  function closeProductModal() {
-    document.getElementById("product-modal").style.display = "none";
-  }
-
-  function changeQty(delta) {
-    currentQty += delta;
-    if (currentQty < 1) currentQty = 1;
-    document.getElementById("modal-qty").innerText = currentQty;
-  }
-
-function addToCart() {
-  if (cart.includes(currentItem.id)) {
-    alert("🔁 Этот товар уже в корзине");
-    return;
-  }
-
-  cart.push(currentItem.id);
-  updateCartCounter();
-  saveCart(); // сохраняем корзину
-
-  const btn = document.getElementById("add-btn");
-  btn.innerText = "✅ Добавлено!";
-  btn.disabled = true;
-
-  setTimeout(() => {
-    btn.innerText = "Добавить в корзину";
-    btn.disabled = false;
-    closeProductModal();
-  }, 1500);
-}
-
-
-
-</script>
-  
-<script>
-  function openCart() {
-  const cartList = document.getElementById("cart-list");
-  cartList.innerHTML = "";
-
-  if (cart.length === 0) {
-    cartList.innerHTML = "<li>Корзина пуста.</li>";
-  } else {
-    cart.forEach(id => {
-      const item = products.find(p => p.id === id);
-      const li = document.createElement("li");
-     li.innerHTML = `
-  ${item.title} — ${item.price}
-  <button onclick="removeFromCart(${id})" style="margin-left: 10px;">🗑</button>
-`;
-
-
-      cartList.appendChild(li);
-    });
-  }
-
-  document.getElementById("cart-modal").style.display = "flex";
-}
-function removeFromCart(id) {
-  cart = cart.filter(itemId => itemId !== id);
-  saveCart();
-  updateCartCounter();
-  openCart(); // Перерисовать корзину
-}
-
-
-    function closeCart() {
-      document.getElementById("cart-modal").style.display = "none";
+    function closeProductModal() {
+      document.getElementById("product-modal").style.display = "none";
     }
+
+    function addToCart() {
+      if (cart.includes(currentItem.id)) {
+        alert("🔁 Этот товар уже в корзине");
+        return;
+      }
+      cart.push(currentItem.id);
+      updateCartCounter();
+      saveCart();
+      const btn = document.getElementById("add-btn");
+      btn.innerText = "✅ Добавлено!";
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.innerText = "Добавить в корзину";
+        btn.disabled = false;
+        closeProductModal();
+      }, 1500);
+    }
+
+    updateCartCounter();
   </script>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -344,51 +316,11 @@ function removeFromCart(id) {
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-
     tg.MainButton.setText("🛒 Перейти в корзину");
     tg.MainButton.show();
     tg.MainButton.onClick(openCart);
   </script>
 </body>
-  
-  <!-- Модалка для карточки товара -->
-<div id="product-modal" style="display: none; position: fixed; inset: 0; background: white; z-index: 9999; overflow-y: auto;">
-  <div style="background: white; margin: 40px auto; padding: 20px; border-radius: 16px; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-    <img id="modal-img" src="" style="width: 100%; border-radius: 12px;" />
-    <h2 id="modal-title" style="font-size: 18px; margin: 16px 0 8px;"></h2>
-    <div id="modal-price" style="font-size: 16px; color: #333; font-weight: bold;"></div>
-    <p id="modal-desc" style="font-size: 14px; margin: 12px 0;">Описание товара</p>
-
-  <!-- 🧾 Модалка оформления заказа -->
-<div id="checkout-modal" style="display: none; position: fixed; inset: 0; background: white; z-index: 10000; overflow-y: auto;">
-  <div style="margin: 40px auto; padding: 20px; border-radius: 16px; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); background: white;">
-    <h2 style="font-size: 18px; margin-bottom: 16px;">Оформление заказа</h2>
-    
-    <label>Ваше имя:</label>
-    <input id="checkout-name" type="text" placeholder="Иван" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc;">
-
-    <label>Номер телефона:</label>
-    <input id="checkout-phone" type="tel" placeholder="+7" style="width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc;">
-
-    <button onclick="submitOrder()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
-      ✅ Оформить заказ
-    </button>
-
-    <button onclick="closeCheckout()" style="margin-top: 10px; background: none; border: none; color: #007aff; width: 100%; font-size: 14px;">
-      Назад
-    </button>
-  </div>
-</div>
-
-
-    <button id="add-btn" onclick="addToCart()" style="background: #007aff; color: white; padding: 10px 16px; border: none; border-radius: 8px; width: 100%; font-size: 16px;">
-  Добавить в корзину
-</button>
-
-    <button onclick="closeProductModal()" style="margin-top: 10px; background: none; border: none; color: #007aff; width: 100%; font-size: 14px;">Закрыть</button>
-  </div>
-</div>
-
 </html>
 
 
