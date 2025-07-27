@@ -241,21 +241,33 @@ function addToCart() {
 </script>
   
 <script>
-    function openCart() {
-      const cartList = document.getElementById("cart-list");
-      cartList.innerHTML = "";
-      if (cart.length === 0) {
-        cartList.innerHTML = "<li>Корзина пуста.</li>";
-      } else {
-        cart.forEach(id => {
-          const item = products.find(p => p.id === id);
-          const li = document.createElement("li");
-          li.textContent = `${item.title} — ${item.price}`;
-          cartList.appendChild(li);
-        });
-      }
-      document.getElementById("cart-modal").style.display = "flex";
-    }
+  function openCart() {
+  const cartList = document.getElementById("cart-list");
+  cartList.innerHTML = "";
+
+  if (cart.length === 0) {
+    cartList.innerHTML = "<li>Корзина пуста.</li>";
+  } else {
+    cart.forEach(id => {
+      const item = products.find(p => p.id === id);
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${item.title} — ${item.price}
+        <button onclick="removeFromCart(${id})" style="margin-left: 10px;">🗑</button>
+      `;
+      cartList.appendChild(li);
+    });
+  }
+
+  document.getElementById("cart-modal").style.display = "flex";
+}
+function removeFromCart(id) {
+  cart = cart.filter(itemId => itemId !== id);
+  saveCart();
+  updateCartCounter();
+  openCart(); // Перерисовать корзину
+}
+
 
     function closeCart() {
       document.getElementById("cart-modal").style.display = "none";
