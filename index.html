@@ -154,9 +154,19 @@
       <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="cart" />
       <span id="cart-count">0</span>
     </div>
+    <button onclick="goBack()" style="
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #007aff;
+">←</button>
+
   </div>
 
-  <h1>Категории</h1>
   <div class="grid" id="product-grid"></div>
 
   <div id="cart-modal">
@@ -319,6 +329,17 @@
    // tg.MainButton.setText("🛒 Перейти в корзину");
     // tg.MainButton.show();
    // tg.MainButton.onClick(openCart);
+
+    function goBack() {
+  // Если в Telegram WebApp — закрываем окно
+  if (window.Telegram.WebApp && Telegram.WebApp.close) {
+    Telegram.WebApp.close();
+  } else {
+    // Иначе просто возвращаемся назад по истории
+    history.back();
+  }
+}
+
   </script>
 </body>
 </html>
