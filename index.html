@@ -122,6 +122,37 @@
     #cart-list {
       margin-bottom: 20px;
     }
+  .btn {
+  background: #007aff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn:hover {
+  background: #005fc0;
+}
+
+.btn.danger {
+  background: #e63946;
+}
+
+.btn.danger:hover {
+  background: #c92635;
+}
+
+.cart-icon button {
+  background: none;
+  border: none;
+  color: #e63946;
+  cursor: pointer;
+  font-size: 14px;
+}
+
   </style>
 </head>
 <body>
@@ -142,8 +173,13 @@
   <div id="cart-modal">
     <div class="modal-content">
       <h3>🛒 Корзина</h3>
-      <ul id="cart-list" style="padding-left: 20px;"></ul>
-      <button onclick="closeCart()">Закрыть</button>
+      <ul id="cart-list" style="padding-left: 20px; margin-bottom: 20px;"></ul>
+
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+  <button onclick="clearCart()" class="btn danger">🧹 Очистить</button>
+  <button onclick="closeCart()" class="btn">Закрыть</button>
+</div>
+
     </div>
   </div>
 
@@ -251,10 +287,11 @@ function addToCart() {
     cart.forEach(id => {
       const item = products.find(p => p.id === id);
       const li = document.createElement("li");
-      li.innerHTML = `
-        ${item.title} — ${item.price}
-        <button onclick="removeFromCart(${id})" style="margin-left: 10px;">🗑</button>
-      `;
+     li.innerHTML = `
+  ${item.title} — ${item.price}
+  <button onclick="removeFromCart(${id})" class="cart-icon">🗑</button>
+`;
+
       cartList.appendChild(li);
     });
   }
